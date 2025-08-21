@@ -2,7 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\TeacherController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -17,3 +19,40 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+//======================================SMS API Routes========================================
+Route::prefix('v1')->group(function () {
+
+    //public authentication routes
+    Route::post('register', [AuthController::class, 'register']);
+    Route::post('login', [AuthController::class, 'login']);
+
+    //public test route
+
+    //protected routes
+    Route::middleware('auth:sanctum')->group(function () {
+        //authenticated user routes
+        Route::post('logout', [AuthController::class, 'logout']);
+        Route::get('users/me', [AuthController::class, 'me']);
+    });
+
+    //student profile routes
+    Route::middleware(['auth:sanctum', 'role:student,admin'])->group(function () {
+        Route::get('students/profile', [StudentController::class, 'show']);
+        Route::post('students/profile', [StudentController::class, 'update']);
+    });
+
+    //teacher profile routes
+    Route::middleware(['auth:sanctum', 'role:teacher,admin'])->group(function () {
+        Route::get('teachers/profile', [TeacherController::class, 'show']);
+        Route::post('teachers/profile', [TeacherController::class, 'update']);
+        Route::delete('teachers/profile', [TeacherController::class, 'destroy']);
+    });
+
+    //student profile completion middleware
+    Route::middleware(['auth:sanctum', 'role:student', 'is_completed'])->group(function () {
+        Route::get('teachers/index', [TeacherController::class, 'index']);
+    });
+});
+
