@@ -28,27 +28,39 @@ Route::prefix('v1')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
 
-    //public test route
-
-    //protected routes
+    //protected general routes
     Route::middleware('auth:sanctum')->group(function () {
         //authenticated user routes
         Route::post('logout', [AuthController::class, 'logout']);
         Route::get('users/me', [AuthController::class, 'me']);
     });
 
-    //student profile routes
-    Route::middleware(['auth:sanctum', 'role:student,admin'])->group(function () {
+    // Student routes - student views/updates own profile
+    Route::middleware(['auth:sanctum', 'role:student'])->group(function () {
         Route::get('students/profile', [StudentController::class, 'show']);
         Route::post('students/profile', [StudentController::class, 'update']);
     });
 
-    //teacher profile routes
-    Route::middleware(['auth:sanctum', 'role:teacher,admin'])->group(function () {
+    // Admin routes - admin manages any student profile by ID
+    Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
+        Route::get('admin/students/{id}/profile', [StudentController::class, 'show']);
+        Route::post('admin/students/{id}/profile', [StudentController::class, 'update']);
+    });
+
+
+    // Teacher routes - teacher views/updates own profile
+    Route::middleware(['auth:sanctum', 'role:teacher'])->group(function () {
         Route::get('teachers/profile', [TeacherController::class, 'show']);
         Route::post('teachers/profile', [TeacherController::class, 'update']);
-        Route::delete('teachers/profile', [TeacherController::class, 'destroy']);
     });
+
+    // Admin routes - admin manages any teacher profile by ID
+    Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
+        Route::get('admin/teachers/{id}/profile', [TeacherController::class, 'show']);
+        Route::post('admin/teachers/{id}/profile', [TeacherController::class, 'update']);
+        Route::delete('admin/teachers/{id}/profile', [TeacherController::class, 'destroy']);
+    });
+
 
     //student profile completion middleware
     Route::middleware(['auth:sanctum', 'role:student', 'is_completed'])->group(function () {

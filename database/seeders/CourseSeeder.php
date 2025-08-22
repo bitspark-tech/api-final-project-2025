@@ -32,17 +32,9 @@ class CourseSeeder extends Seeder
         Course::create([
             'title' => 'Solid Works',
             'description' => 'A comprehensive course on Solid Works for 3D modeling.',
-            'code' => 'CT301',
+            'code' => ' 301',
             'credit_value' => 3,
-            'teacher_id' => 9,
-        ]);
-
-        Course::create([
-            'title' => 'Structural Analysis',
-            'description' => 'Study the principles of structural analysis in civil engineering.',
-            'code' => 'CE404',
-            'credit_value' => 4,
-            'teacher_id' => 10,
+            'teacher_id' => 11,
         ]);
     }
 }
