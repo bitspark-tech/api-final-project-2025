@@ -57,22 +57,13 @@ class FeedBackController extends Controller
 
     // admin views all feedbacks
 
-    public function index() {
-        $user = Auth::user();
-        $user->role === 'admin';
-        return FeedBack::all();
+   
+    public function  index() {
+        $feedBacks = FeedBack::with('student', 'course')->get();
+        return response()->json([
+           'status' => 'success',
+           'data' => $feedBacks,
+        ]);
     }
-    public function show($id = null){
-        //teacher sees feedbacks
-        $user = Auth::user();
-        $user->role === 'teacher';
-        return Feedback::findOrFail($id);
-    }
-
-            
-         
-
-    
-
-
 }
+
