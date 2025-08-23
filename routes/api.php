@@ -8,6 +8,7 @@ use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\FeedBackController as ControllersFeedBackController;
 use App\Http\Controllers\GradeController;
 
 /*
@@ -90,17 +91,18 @@ Route::prefix('v1')->group(function () {
     Route::middleware(['auth:sanctum'])->group(function () {
         // ---------------Student feedback routes------------------
         Route::middleware('role:student')->group(function () {
-            
+            Route::post('create-feedbacks', [FeedbackController::class, 'store']);   
     });
 
         // ------------------Admin feedback routes------------------------
         Route::middleware('role:admin')->group(function () {
-            
+            Route::get('feedbacks', [FeedbackController::class, 'index']);
+            Route::get('feedbacks/{id}', [FeedbackController::class, 'show']);
         });
 
         // ----------------Teacher feedback routes-----------------------
         Route::middleware('role:teacher')->group(function () {
-            
+            Route::get('feedbacks/{id}', [FeedbackController::class, 'show']);
         });
     });
 
@@ -113,7 +115,7 @@ Route::prefix('v1')->group(function () {
 
         // ----------Student grade routes------------
         Route::middleware('role:student')->group(function () {
-            
+           Route::post('feedbacks', [FeedbackController::class, 'store']); 
         });
 
         // ------------Admin grade routes---------------
