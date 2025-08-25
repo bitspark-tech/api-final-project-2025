@@ -79,7 +79,7 @@ Route::prefix('v1')->group(function () {
             
         });
         // ---------teacher or admin enrollment routes -----------
-        Route::middleware(['role:teacher|admin'])->group(function () {
+        Route::middleware(['role:teacher,admin'])->group(function () {
             
         });
     });
